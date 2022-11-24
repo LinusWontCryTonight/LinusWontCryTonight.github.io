@@ -32,41 +32,64 @@
 <body>
   <div id="app">
     <div class="content">
+      <!-- 列表 -->
       <div class="attr_content">
         <div class="title" style="background-color: #424242;">防禦方</div>
         <ul class="attr_list">
-          <!-- <li class="item">火</li> -->
-          <li v-for="item in attrList" class="item" :class="{active:activeAttr == item.id}"
-            :style="{ backgroundColor : item.color }" @click="activeAttr = item.id">
+          <li v-for="item in attrList" class="item" :class="{active:index.includes(item.id)}"
+            :style="{ backgroundColor : item.color }" @click="setAttr(item.id)">
             <img :src="'img/'+item.name+'.png'" alt="">
             <span>{{item.name}}</span>
           </li>
         </ul>
       </div>
+      <!-- 結果 -->
       <div class="result_content">
-        <div class="title" style="background-color: #F63B4C;">攻擊方</div>
-        <div class="result_list">
-          <!-- 2x -->
-          <div class="result_item" v-if="attrList[activeAttr].good">
-            <h4 style="color: rgb(144 161 23);">2x</h4>
+        <div class="title" v-if="index.length" style="background-color: #F63B4C;">攻擊方
+        <!-- {{attrList[index[0]].name}} -->
+        </div>
+        <!-- 如果沒東西 -->
+        <div class="list_none" v-if="index.length == 0">
+          請選擇防禦方寶可夢的屬性
+        </div>
+        <div class="result_list" v-if="index.length != 0">
+          <!-- 4x -->
+          <div class="result_item" v-if="activeArr.foretimes.length != 0">
+            <h4 style="color: #429f2e">4x</h4>
             <ul>
-              <li v-for="item in attrList[activeAttr].good" :style="{ backgroundColor : attrList[item].color }">
+              <li v-for="item in activeArr.foretimes" :style="{ backgroundColor : attrList[item].color }">
+                {{attrList[item].name}}</li>
+            </ul>
+          </div>
+          <!-- 2x -->
+          <div class="result_item" v-if="activeArr.double.length != 0">
+            <h4 style="color: rgb(144 161 24)">2x</h4>
+            <ul>
+              <li v-for="item in activeArr.double" :style="{ backgroundColor : attrList[item].color }">
                 {{attrList[item].name}}</li>
             </ul>
           </div>
           <!-- 1/2x -->
-          <div class="result_item" v-if="attrList[activeAttr].bad">
-            <h4 style="color: rgb(243 63 119);">1/2x</h4>
+          <div class="result_item" v-if="activeArr.half.length != 0">
+            <h4 style="color: rgb(244 129 11)">1/2x</h4>
             <ul>
-              <li v-for="item in attrList[activeAttr].bad" :style="{ backgroundColor : attrList[item].color }">
+              <li v-for="item in activeArr.half" :style="{ backgroundColor : attrList[item].color }">
+                {{attrList[item].name}}</li>
+            </ul>
+          </div>
+          <!-- 1/4x -->
+          <div class="result_item" v-if="activeArr.quarter.length != 0">
+            <h4 style="color: rgb(232 38 38)">1/4x</h4>
+            <ul>
+              <li v-for="item in activeArr.quarter" :style="{ backgroundColor : attrList[item].color }">
                 {{attrList[item].name}}</li>
             </ul>
           </div>
           <!-- 0x -->
-          <div class="result_item" v-if="attrList[activeAttr].none">
-            <h4 style="color: rgb(144 153 161);">0x</h4>
+          <div class="result_item" v-if="activeArr.zero.length != 0">
+            <h4 style="color: rgb(144 153 161)">0x</h4>
             <ul>
-              <li v-for="item in attrList[activeAttr].none" :style="{ backgroundColor : attrList[item].color }">
+              <li v-for="item in activeArr.zero" :style="{ backgroundColor : attrList[item].color }">
                 {{attrList[item].name}}</li>
             </ul>
           </div>
@@ -74,6 +97,7 @@
       </div>
     </div>
   </div>
+
   <script src="js/attr.js"></script>
   <script src="js/vue.global.js"></script>
   <script type="module">
@@ -81,11 +105,123 @@
       data() {
         return {
           attrList: attributes,
-          activeAttr: 0
+          index: [],
+          activeArr: {},
         };
       },
       components: {
-      }
+      },
+      methods: {
+        setAttr(id) {
+          let vm = this;
+          let arrIndex = vm.index;
+          let nowLen = arrIndex.length;
+
+          if (nowLen == 0) {
+            vm.index = arrIndex;
+            vm.activeArr = vm.attrList[id];
+            arrIndex.push(id);
+          } else if (nowLen == 1) {
+            arrIndex.push(id);
+            let firstAttr = vm.attrList[arrIndex[0]];
+            let secondAttr = vm.attrList[arrIndex[1]];
+
+            let newForetimes = firstAttr.double.filter((e) => {
+              return secondAttr.double.indexOf(e) > -1
+            })
+
+            let newDouble = firstAttr.double.filter((e) => {
+              return secondAttr.double.indexOf(e) === -1
+            }).concat(secondAttr.double.filter((f) => {
+              return firstAttr.double.indexOf(f) === -1
+            }))
+
+            let repeat = firstAttr.double.filter((e) => {
+              return secondAttr.half.indexOf(e) > -1
+            })
+
+            newDouble = newDouble.filter((e) => {
+              return repeat.indexOf(e) === -1
+            }).concat(repeat.filter((f) => {
+              return newDouble.indexOf(f) === -1
+            }));
+
+
+            let repeat2 = secondAttr.double.filter((e) => {
+              return firstAttr.half.indexOf(e) > -1
+            })
+
+            newDouble = newDouble.filter((e) => {
+              return repeat2.indexOf(e) === -1
+            }).concat(repeat2.filter((f) => {
+              return newDouble.indexOf(f) === -1
+            }))
+
+            let newHalf = firstAttr.half.filter((e) => {
+              return secondAttr.half.indexOf(e) === -1
+            }).concat(secondAttr.half.filter((f) => {
+              return firstAttr.half.indexOf(f) === -1
+            }))
+
+            newHalf = newHalf.filter((e) => {
+              return repeat.indexOf(e) === -1
+            }).concat(repeat.filter((f) => {
+              return newHalf.indexOf(f) === -1
+            }))
+            newHalf = newHalf.filter((e) => {
+              return repeat2.indexOf(e) === -1
+            }).concat(repeat2.filter((f) => {
+              return newHalf.indexOf(f) === -1
+            }))
+
+            let newQuarter = firstAttr.half.filter((e) => {
+              return secondAttr.half.indexOf(e) > -1
+            })
+
+            let newZero = firstAttr.zero.concat(secondAttr.zero.filter((e) => {
+              return firstAttr.zero.indexOf(e) === -1
+            }))
+
+            newDouble = newDouble.filter((e) => {
+              return newZero.indexOf(e) === -1
+            })
+
+            newHalf = newHalf.filter((e) => {
+              return newZero.indexOf(e) === -1
+            })
+            newQuarter = newQuarter.filter((e) => {
+              return newZero.indexOf(e) === -1
+            })
+            newForetimes = newForetimes.filter((e) => {
+              return newZero.indexOf(e) === -1
+            })
+            vm.activeArr = {
+              'double': newDouble,
+              'half': newHalf,
+              'foretimes': newForetimes,
+              'quarter': newQuarter,
+              'zero': newZero,
+            }
+          } else if (nowLen == 2) {
+            vm.index = arrIndex;
+            vm.activeArr = vm.attrList[id];
+            arrIndex = [];
+            arrIndex.push(id);
+            vm.index = arrIndex;
+          }
+
+
+
+        }
+      },
+      mounted() {
+        // 初始化，顯示一般
+        let vm = this;
+        if (vm.activeArr.length) {
+          vm.activeArr = vm.attrList[vm.index]
+        }
+
+      },
     });
     app.mount('#app');
   </script>

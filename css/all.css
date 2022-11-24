@@ -102,7 +102,7 @@ body {
 }
 @media (max-width: 575px) {
   .attr_content {
-    height: 60%;
+    height: 50%;
   }
 }
 
@@ -142,7 +142,7 @@ ul.attr_list li {
   position: relative;
   margin: auto;
   width: 33%;
-  height: 16.5%;
+  height: 16%;
   text-align: center;
   font-size: 1.2rem;
   letter-spacing: 0.1em;
@@ -150,6 +150,7 @@ ul.attr_list li {
   color: #fff;
   border-radius: 10px;
   padding: 0.5rem 1rem;
+  border: 2px solid #fff;
   -webkit-transition: 0.3s ease;
   transition: 0.3s ease;
 }
@@ -169,12 +170,15 @@ ul.attr_list li span {
   text-align: center;
 }
 ul.attr_list li.active {
-  border: 4px solid rgb(66, 66, 66);
+  border: 4px solid rgb(0, 0, 0);
 }
 @media (max-width: 575px) {
   ul.attr_list li {
     font-size: 0.95rem;
     padding: 0.5rem 0.65rem;
+  }
+  ul.attr_list li.active {
+    border: 3px solid rgb(0, 0, 0);
   }
 }
 
@@ -191,8 +195,12 @@ ul.attr_list li.active {
 }
 @media (max-width: 575px) {
   .result_content {
-    height: 40%;
+    height: 50%;
   }
+}
+
+.result_list {
+  background: #fff;
 }
 
 .result_item {
@@ -206,6 +214,16 @@ ul.attr_list li.active {
   margin: auto 0;
   width: 100%;
   border-bottom: 1px solid #eee;
+}
+@media (max-width: 575px) {
+  .result_item {
+    padding: 0.35rem 0;
+  }
+}
+@media (max-width: 375px) {
+  .result_item {
+    padding: 0.2rem 0;
+  }
 }
 .result_item h4 {
   font-size: 2rem;
@@ -251,4 +269,17 @@ ul.attr_list li.active {
     width: 20%;
     margin-right: 0.5rem;
   }
+}
+@media (max-width: 375px) {
+  .result_item ul li {
+    padding: 0.45rem 0.23rem;
+  }
+}
+
+.list_none {
+  text-align: center;
+  color: #444;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  letter-spacing: 0.15em;
 }
