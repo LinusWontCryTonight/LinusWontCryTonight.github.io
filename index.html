@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>寶可夢屬性相剋表</title>
-  <link rel="stylesheet" href="css/all.css?v2">
+  <link rel="stylesheet" href="css/all.css?v3">
   <link rel="apple-touch-icon" sizes="57x57" href="img/apple-touch-icon-57x57.png" />
   <link rel="apple-touch-icon" sizes="60x60" href="img/apple-touch-icon-60x60.png" />
   <link rel="apple-touch-icon" sizes="72x72" href="img/apple-touch-icon-72x72.png" />
@@ -22,8 +22,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="description" content="一個你各位訓練家在進行寶可夢遊戲時，能查詢屬性相剋關係，的表。" />
   <meta property="og:description" content="一個你各位訓練家在進行寶可夢遊戲時，能查詢屬性相剋關係，的表。" />
-  <meta itemprop="image" content="img/meta.jpg?v2" />
-  <meta property="og:image" content="img/meta.jpg?v2" />
+  <meta itemprop="image" content="img/meta.jpg?v3" />
+  <meta property="og:image" content="img/meta.jpg?v3" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="寶可夢屬性相剋表" />
 
@@ -34,7 +34,9 @@
     <div class="content">
       <!-- 列表 -->
       <div class="attr_content">
-        <div class="title" style="background-color: #424242;">防禦方</div>
+        <div class="title" style="background-color: #424242;">防禦方
+          <a href="#" @click="activeArr={},index=[]"><img src="img/refresh.svg" alt=""></a>
+        </div>
         <ul class="attr_list">
           <li v-for="item in attrList" class="item" :class="{active:index.includes(item.id)}"
             :style="{ backgroundColor : item.color }" @click="setAttr(item.id)">
@@ -46,7 +48,7 @@
       <!-- 結果 -->
       <div class="result_content">
         <div class="title" v-if="index.length" style="background-color: #F63B4C;">攻擊方
-        <!-- {{attrList[index[0]].name}} -->
+          <!-- {{attrList[index[0]].name}} -->
         </div>
         <!-- 如果沒東西 -->
         <div class="list_none" v-if="index.length == 0">
@@ -122,96 +124,110 @@
             vm.activeArr = vm.attrList[id];
             arrIndex.push(id);
           } else if (nowLen == 1) {
-            arrIndex.push(id);
-            let firstAttr = vm.attrList[arrIndex[0]];
-            let secondAttr = vm.attrList[arrIndex[1]];
+            // 判斷是不是點到同一個
+            if (arrIndex[0] == id) {
+              vm.index = [];
+              vm.activeArr = {};
+            } else {
+              arrIndex.push(id);
 
-            let newForetimes = firstAttr.double.filter((e) => {
-              return secondAttr.double.indexOf(e) > -1
-            })
+              let firstAttr = vm.attrList[arrIndex[0]];
+              let secondAttr = vm.attrList[arrIndex[1]];
 
-            let newDouble = firstAttr.double.filter((e) => {
-              return secondAttr.double.indexOf(e) === -1
-            }).concat(secondAttr.double.filter((f) => {
-              return firstAttr.double.indexOf(f) === -1
-            }))
+              let newForetimes = firstAttr.double.filter((e) => {
+                return secondAttr.double.indexOf(e) > -1
+              })
 
-            let repeat = firstAttr.double.filter((e) => {
-              return secondAttr.half.indexOf(e) > -1
-            })
+              let newDouble = firstAttr.double.filter((e) => {
+                return secondAttr.double.indexOf(e) === -1
+              }).concat(secondAttr.double.filter((f) => {
+                return firstAttr.double.indexOf(f) === -1
+              }))
 
-            newDouble = newDouble.filter((e) => {
-              return repeat.indexOf(e) === -1
-            }).concat(repeat.filter((f) => {
-              return newDouble.indexOf(f) === -1
-            }));
+              let repeat = firstAttr.double.filter((e) => {
+                return secondAttr.half.indexOf(e) > -1
+              })
+
+              newDouble = newDouble.filter((e) => {
+                return repeat.indexOf(e) === -1
+              }).concat(repeat.filter((f) => {
+                return newDouble.indexOf(f) === -1
+              }));
 
 
-            let repeat2 = secondAttr.double.filter((e) => {
-              return firstAttr.half.indexOf(e) > -1
-            })
+              let repeat2 = secondAttr.double.filter((e) => {
+                return firstAttr.half.indexOf(e) > -1
+              })
 
-            newDouble = newDouble.filter((e) => {
-              return repeat2.indexOf(e) === -1
-            }).concat(repeat2.filter((f) => {
-              return newDouble.indexOf(f) === -1
-            }))
+              newDouble = newDouble.filter((e) => {
+                return repeat2.indexOf(e) === -1
+              }).concat(repeat2.filter((f) => {
+                return newDouble.indexOf(f) === -1
+              }))
 
-            let newHalf = firstAttr.half.filter((e) => {
-              return secondAttr.half.indexOf(e) === -1
-            }).concat(secondAttr.half.filter((f) => {
-              return firstAttr.half.indexOf(f) === -1
-            }))
+              let newHalf = firstAttr.half.filter((e) => {
+                return secondAttr.half.indexOf(e) === -1
+              }).concat(secondAttr.half.filter((f) => {
+                return firstAttr.half.indexOf(f) === -1
+              }))
 
-            newHalf = newHalf.filter((e) => {
-              return repeat.indexOf(e) === -1
-            }).concat(repeat.filter((f) => {
-              return newHalf.indexOf(f) === -1
-            }))
-            newHalf = newHalf.filter((e) => {
-              return repeat2.indexOf(e) === -1
-            }).concat(repeat2.filter((f) => {
-              return newHalf.indexOf(f) === -1
-            }))
+              newHalf = newHalf.filter((e) => {
+                return repeat.indexOf(e) === -1
+              }).concat(repeat.filter((f) => {
+                return newHalf.indexOf(f) === -1
+              }))
+              newHalf = newHalf.filter((e) => {
+                return repeat2.indexOf(e) === -1
+              }).concat(repeat2.filter((f) => {
+                return newHalf.indexOf(f) === -1
+              }))
 
-            let newQuarter = firstAttr.half.filter((e) => {
-              return secondAttr.half.indexOf(e) > -1
-            })
+              let newQuarter = firstAttr.half.filter((e) => {
+                return secondAttr.half.indexOf(e) > -1
+              })
 
-            let newZero = firstAttr.zero.concat(secondAttr.zero.filter((e) => {
-              return firstAttr.zero.indexOf(e) === -1
-            }))
+              let newZero = firstAttr.zero.concat(secondAttr.zero.filter((e) => {
+                return firstAttr.zero.indexOf(e) === -1
+              }))
 
-            newDouble = newDouble.filter((e) => {
-              return newZero.indexOf(e) === -1
-            })
+              newDouble = newDouble.filter((e) => {
+                return newZero.indexOf(e) === -1
+              })
 
-            newHalf = newHalf.filter((e) => {
-              return newZero.indexOf(e) === -1
-            })
-            newQuarter = newQuarter.filter((e) => {
-              return newZero.indexOf(e) === -1
-            })
-            newForetimes = newForetimes.filter((e) => {
-              return newZero.indexOf(e) === -1
-            })
-            vm.activeArr = {
-              'double': newDouble,
-              'half': newHalf,
-              'foretimes': newForetimes,
-              'quarter': newQuarter,
-              'zero': newZero,
+              newHalf = newHalf.filter((e) => {
+                return newZero.indexOf(e) === -1
+              })
+              newQuarter = newQuarter.filter((e) => {
+                return newZero.indexOf(e) === -1
+              })
+              newForetimes = newForetimes.filter((e) => {
+                return newZero.indexOf(e) === -1
+              })
+              vm.activeArr = {
+                'double': newDouble,
+                'half': newHalf,
+                'foretimes': newForetimes,
+                'quarter': newQuarter,
+                'zero': newZero,
+              }
             }
           } else if (nowLen == 2) {
-            vm.index = arrIndex;
-            vm.activeArr = vm.attrList[id];
-            arrIndex = [];
-            arrIndex.push(id);
-            vm.index = arrIndex;
+            if (vm.index.includes(id)) {
+              vm.index = arrIndex;
+              let resultIndex = arrIndex.filter(function (value) {
+                return value != id;
+              });
+              vm.index = resultIndex;
+              vm.activeArr = vm.attrList[resultIndex];
+
+            } else {
+              vm.index = arrIndex;
+              vm.activeArr = vm.attrList[id];
+              arrIndex = [];
+              arrIndex.push(id);
+              vm.index = arrIndex;
+            }
           }
-
-
-
         }
       },
       mounted() {

@@ -107,10 +107,24 @@ body {
 }
 
 .title {
+  position: relative;
   text-align: center;
   padding: 0.75rem 0;
   color: #fff;
   letter-spacing: 0.1em;
+}
+.title a {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  color: #fff;
+  display: inline-block;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  text-decoration: none;
+}
+.title a img {
+  height: 24px;
 }
 @media (max-width: 575px) {
   .title {

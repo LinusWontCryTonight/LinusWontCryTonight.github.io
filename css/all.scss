@@ -52,10 +52,24 @@ body {
 }
 
 .title {
+    position: relative;
     text-align: center;
     padding: 0.75rem 0;
     color: #fff;
     letter-spacing: .1em;
+
+    a {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        color: #fff;
+        display: inline-block;
+        transform: translateY(-50%);
+        text-decoration: none;
+        img {
+            height: 24px;
+        }
+    }
 
     @include mobile {
         font-size: 0.9rem;

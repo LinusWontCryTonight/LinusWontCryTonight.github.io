@@ -163,11 +163,11 @@ let attributes = [
     id: 16,
     'name': '惡',
     'color': 'rgb(80 65 61)',
-    'double': [1, 6, 13, 17],
+    'double': [1, 6, 17],
     'half': [7, 16],
     'foretimes': [],
     'quarter': [],
-    'zero': [],
+    'zero': [13],
   },
   {
     id: 17,
